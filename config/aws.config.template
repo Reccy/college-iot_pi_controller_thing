@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- Configuration settings for connecting the GrovePi to AWS IoT Core -->
-
-<config>
+<aws_config>
+	
 	<!-- ID of the physical IoT Device to listen to -->
 	<client_id>My IoT Device</client_id>
 
@@ -18,4 +18,5 @@
 
 	<!-- Path to the Private Key -->
 	<private_key_path>cers/MyIoTDevice.private.key</private_key_path>
-</config>
+
+</aws_config>

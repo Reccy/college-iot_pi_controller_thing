@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- NOTE: This config file should not be edited by the user! -->
+<sensors>
 
-<config>
 	<!-- Each sensor has its own object to store configuration details -->
 	<sensor>
 
@@ -22,4 +22,5 @@
 		<sample_rate></sample_rate>
 
 	</sensor>
-</config>
+	
+</sensors>
