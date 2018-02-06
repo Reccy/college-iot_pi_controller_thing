@@ -3,3 +3,4 @@ security_certs/
 
 # AWS configuration
 config/aws.config
+config/sensors.config

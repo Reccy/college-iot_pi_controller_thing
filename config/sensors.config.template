@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- NOTE: This config file should not be edited by the user! -->
+
+<config>
+	<!-- Each sensor has its own object to store configuration details -->
+	<sensor>
+
+		<!-- The ID of the physical GrovePi port to listen to (E.g. D2) -->
+		<port_id></port_id>
+
+		<!-- The type of sensor installed in port_id (E.g. humidity_temperature_sensor) -->
+		<sensor_type></sensor_type>
+
+		<!-- Human readable display name for the sensor (E.g. Room Temperature) -->
+		<display_name></display_name>
+
+		<!-- If the sensor is currently enabled (E.g. false) -->
+		<is_enabled></is_enabled>
+
+		<!-- How long to wait between each sample in seconds (E.g. 5) -->
+		<sample_rate></sample_rate>
+
+	</sensor>
+</config>

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Configuration settings for connecting the GrovePi to AWS IoT Core -->
+
 <config>
 	<!-- ID of the physical IoT Device to listen to -->
 	<client_id>My IoT Device</client_id>
