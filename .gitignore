@@ -1,2 +1,5 @@
 # Security Certs for AWS configuration
 security_certs/
+
+# AWS configuration
+config/aws.config

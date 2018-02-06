@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<!-- ID of the physical IoT Device to listen to -->
+	<client_id>My IoT Device</client_id>
+
+	<!-- Endpoint used to connect to AWS IoT Core. Can be found in the IoT Core settings menu on the AWS console. -->
+	<endpoint>fakeendpoint.iot.eu-west-1.amazonaws.com</endpoint>
+
+	<!-- Certs can be downloaded from your thing's IoT Core console. -->
+	<!-- Path to the Root CA -->
+	<root_ca_path>certs/root_ca.crt</root_ca_path>
+
+	<!-- Path to the Certificate -->
+	<certificate_path>certs/MyIoTDevice.cert.pem</certificate_path>
+
+	<!-- Path to the Private Key -->
+	<private_key_path>cers/MyIoTDevice.private.key</private_key_path>
+</config>
