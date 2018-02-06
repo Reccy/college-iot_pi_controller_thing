@@ -14,9 +14,9 @@
 	<root_ca_path>certs/root_ca.crt</root_ca_path>
 
 	<!-- Path to the Certificate -->
-	<certificate_path>certs/MyIoTDevice.cert.pem</certificate_path>
+	<certificate_path>certs/certificate.pem.crt</certificate_path>
 
 	<!-- Path to the Private Key -->
-	<private_key_path>cers/MyIoTDevice.private.key</private_key_path>
+	<private_key_path>certs/private.pem.key</private_key_path>
 
 </aws_config>
