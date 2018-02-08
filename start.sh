@@ -11,30 +11,22 @@ echo ""
 echo "Running self-check..."
 
 # Check if running on a Raspberry Pi
-echo "Checking if running on a Raspberry Pi."
+echo "Checking if running on a Raspberry Pi"
 if cat /proc/device-tree/model | grep "Raspberry Pi"; then
-	echo "OK: Running on a Raspberry Pi."
+	echo "OK: Running on a Raspberry Pi"
 else
-	echo "ERROR: Not Running on Raspberry Pi! Please run this program on a Raspberry Pi."
+	echo "ERROR: Not Running on Raspberry Pi! Please run this program on a Raspberry Pi"
 	exit 1
 fi
 
 # Check if Python version is correct
-echo "Checking if Python is installed."
+echo "Checking if Python is installed"
 if command -v python &>/dev/null; then
-    echo "OK: Python is installed."
+    echo "OK: Python is installed"
 else
-    echo "ERROR: Python is not installed. Please install Python to run this program."
+    echo "ERROR: Python is not installed. Please install Python to run this program"
     exit 1
 fi
-
-# TODO: Check file integrity
-echo "Checking project file structure."
-echo "OK: Project files configured correctly."
-
-# TODO: Check for lockfile
-echo "Checking for lockfile."
-echo "OK: Lockfile not found."
 
 # Run the Python script
 echo "Self-check Complete"
