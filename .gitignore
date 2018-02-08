@@ -5,3 +5,6 @@ security_certs/
 config/aws.config
 config/sensors.config
 config/certs
+
+# Python compiled
+*.pyc
