@@ -64,3 +64,7 @@ class aws_controller:
 				print "Error: ", e.message
 
 			exit(1)
+
+	# Publishes a payload to the passed in topic 
+	def publish(self, topic, payload):
+		print "DUMMY PUBLISH: ", payload, "TO", topic

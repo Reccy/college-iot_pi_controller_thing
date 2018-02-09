@@ -36,14 +36,15 @@ class pi_controller():
 			aws = aws_controller(config.aws_client_id, config.aws_endpoint, config.aws_root_ca_path, config.aws_certificate_path, config.aws_private_key_path)
 			aws.test()
 
-			# Start threads for publishing sensor data and listening for sensor configuration changes
-			print "Starting Subscriber Thread..."
-			sub = subscriber_thread()
-			sub_thread = Thread(target=sub.main)
-			sub_thread.start()
+			# Start threads for publishing sensor data and listening for sensor configuration changes.
+			# Also pass configured aws_controller instance to threads. 
+			#print "Starting Subscriber Thread..."
+			#sub = subscriber_thread()
+			#sub_thread = Thread(target=sub.main)
+			#sub_thread.start()
 
 			print "Starting Publisher Thread..."
-			pub = publisher_thread()
+			pub = publisher_thread(aws_controller)
 			pub_thread = Thread(target=pub.main)
 			pub_thread.start()
 
