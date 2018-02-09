@@ -25,16 +25,12 @@ class publisher_thread:
 		while (True):
 
 			# Get any readings from the sensor array
-			print "Checking for readings..."
 			payload = sensors.get_readings()
 
 			if len(payload) > 0:
-				self.aws_controller.publish("test_topic",payload)
+				self.aws_controller.publish("test_topic", payload)
 			
 			# Check if the thread should keep alive
 			if not lockfiles.lockfile_exists(lockfile_path, False):
 				print "Stopping Publisher Thread"
 				exit(0)
-
-			# If the thread can be left alive, sleep for 0.5 seconds
-			time.sleep(0.5)

@@ -11,6 +11,7 @@ from aws_controller import aws_controller
 
 # Responsible for orchestrating the application startup process
 class pi_controller():
+	owns_lock = False
 	is_listening = False
 	is_publishing = False
 
@@ -24,7 +25,8 @@ class pi_controller():
 			lockfiles = lockfile_manager()
 
 			# Check lockfile
-			if lockfiles.lockfile_write(lockfile_path) == False:
+			self.owns_lock = lockfiles.lockfile_write(lockfile_path)['success']
+			if self.owns_lock == False:
 				print "This application is already running. Exiting..."
 				exit(0)
 
@@ -44,7 +46,7 @@ class pi_controller():
 			#sub_thread.start()
 
 			print "Starting Publisher Thread..."
-			pub = publisher_thread(aws_controller)
+			pub = publisher_thread(aws)
 			pub_thread = Thread(target=pub.main)
 			pub_thread.start()
 
@@ -56,7 +58,8 @@ class pi_controller():
 
 		# Cleanup
 		finally:
-			lockfiles.lockfile_remove(lockfile_path)
+			if self.owns_lock == True:
+				lockfiles.lockfile_remove(lockfile_path)
 
 pi = pi_controller()
 pi.startup()
