@@ -12,8 +12,6 @@ from aws_controller import aws_controller
 # Responsible for orchestrating the application startup process
 class pi_controller():
 	owns_lock = False
-	is_listening = False
-	is_publishing = False
 
 	# Load configurations and start threads
 	def startup(self):
@@ -38,15 +36,26 @@ class pi_controller():
 			aws = aws_controller(config.aws_client_id, config.aws_endpoint, config.aws_root_ca_path, config.aws_certificate_path, config.aws_private_key_path)
 			aws.test()
 
+			while not aws.ready:
+				print aws.ready
+				time.sleep(0.1)
+
+			# Connect to AWS
+			aws.connect()
+
+			while not aws.connected:
+				print aws.connected
+				time.sleep(0.1)
+
 			# Start threads for publishing sensor data and listening for sensor configuration changes.
 			# Also pass configured aws_controller instance to threads. 
-			#print "Starting Subscriber Thread..."
-			#sub = subscriber_thread()
-			#sub_thread = Thread(target=sub.main)
-			#sub_thread.start()
+			print "Starting Subscriber Thread..."
+			sub = subscriber_thread(aws, config)
+			sub_thread = Thread(target=sub.main)
+			sub_thread.start()
 
-			print "Starting Publisher Thread..."
-			pub = publisher_thread(aws)
+			#print "Starting Publisher Thread..."
+			pub = publisher_thread(aws, config)
 			pub_thread = Thread(target=pub.main)
 			pub_thread.start()
 

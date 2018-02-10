@@ -6,9 +6,10 @@ from lockfile_manager import lockfile_manager
 
 # Responsible for asynchronously sending sensor data to AWS
 class publisher_thread:
-	def __init__(self, aws):
+	def __init__(self, aws_controller, config_manager):
 		print "Configuring Publisher Thread..."
-		self.aws_controller = aws
+		self.aws_controller = aws_controller
+		self.config_manager = config_manager
 
 	def main(self):
 		print "Publisher Thread Running..."
