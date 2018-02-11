@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 from sensor import sensor
 from button_sensor import button_sensor
+from rangefinder_sensor import rangefinder_sensor
 
 # List of sensors and helper methods for accessing the sensors on the GrovePi
 class sensor_array:
@@ -28,6 +29,9 @@ class sensor_array:
 		if sensor_type == "button":
 			print "Configuring button on port", port_id
 			self.sensors.append(button_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
+		elif sensor_type == "rangefinder":
+			print "Configuring rangefinder on port", port_id
+			self.sensors.append(rangefinder_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
 		else:
 			print "Sensor not implemented:", sensor_type
 
@@ -77,7 +81,6 @@ class sensor_array:
 		
 		# Read each sensor in the array
 		for sensor in self.sensors:
-			print sensor.is_enabled
 			if sensor.is_enabled and sensor.ready():
 				sensor.update_last_read_time()
 				payload.append(sensor.read())
