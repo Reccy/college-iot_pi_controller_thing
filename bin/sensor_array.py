@@ -5,6 +5,7 @@ from rangefinder_sensor import rangefinder_sensor
 from sound_sensor import sound_sensor
 from temperature_humidity_sensor import temperature_humidity_sensor
 from light_sensor import light_sensor
+from potentiometer_sensor import potentiometer_sensor
 
 # List of sensors and helper methods for accessing the sensors on the GrovePi
 class sensor_array:
@@ -44,6 +45,9 @@ class sensor_array:
 		elif sensor_type == "light":
 			print "Configuring light sensor on port", port_id
 			self.sensors.append(light_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
+		elif sensor_type == "potentiometer":
+			print "Configuring potentiometer sensor on port", port_id
+			self.sensors.append(potentiometer_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
 		else:
 			print "Sensor not implemented:", sensor_type
 
