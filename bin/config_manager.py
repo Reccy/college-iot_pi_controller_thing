@@ -129,11 +129,8 @@ class config_manager:
 			existing_port_nodes = []
 
 			for node in port_id_nodes:
-				print node.firstChild.nodeValue
 				if node.firstChild.nodeValue == port_id:
 					existing_port_nodes.append(node)
-
-			print "Found existing port nodes: ", len(existing_port_nodes)
 
 			if len(existing_port_nodes) is not 0:
 				existing_sensor = existing_port_nodes[0].parentNode
