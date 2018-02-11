@@ -2,6 +2,7 @@
 from sensor import sensor
 from button_sensor import button_sensor
 from rangefinder_sensor import rangefinder_sensor
+from sound_sensor import sound_sensor
 
 # List of sensors and helper methods for accessing the sensors on the GrovePi
 class sensor_array:
@@ -32,6 +33,9 @@ class sensor_array:
 		elif sensor_type == "rangefinder":
 			print "Configuring rangefinder on port", port_id
 			self.sensors.append(rangefinder_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
+		elif sensor_type == "sound":
+			print "Configuring sound sensor on port", port_id
+			self.sensors.append(sound_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
 		else:
 			print "Sensor not implemented:", sensor_type
 
