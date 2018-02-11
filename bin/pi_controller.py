@@ -2,6 +2,7 @@
 import os
 import time
 import logging
+from sensor_array import sensor_array
 from publisher_thread import publisher_thread
 from subscriber_thread import subscriber_thread
 from threading import Thread
@@ -11,8 +12,7 @@ from aws_controller import aws_controller
 
 # Responsible for orchestrating the application startup process
 class pi_controller():
-	is_listening = False
-	is_publishing = False
+	owns_lock = False
 
 	# Load configurations and start threads
 	def startup(self):
@@ -24,26 +24,41 @@ class pi_controller():
 			lockfiles = lockfile_manager()
 
 			# Check lockfile
-			if lockfiles.lockfile_write(lockfile_path) == False:
+			self.owns_lock = lockfiles.lockfile_write(lockfile_path)['success']
+			if self.owns_lock == False:
 				print "This application is already running. Exiting..."
 				exit(0)
 
 			# Setup configuration
-			config = config_manager()
+			sensors = sensor_array()
+			config = config_manager(sensors)
 			config.load_aws()
+			config.load_sensors()
 
 			# Test AWS connection
 			aws = aws_controller(config.aws_client_id, config.aws_endpoint, config.aws_root_ca_path, config.aws_certificate_path, config.aws_private_key_path)
 			aws.test()
 
-			# Start threads for publishing sensor data and listening for sensor configuration changes
+			# Wait for the AWS test to complete
+			while not aws.ready:
+				time.sleep(0.1)
+
+			# Connect to AWS
+			aws.connect()
+
+			# Wait for AWS to connect
+			while not aws.connected:
+				time.sleep(0.1)
+
+			# Start threads for publishing sensor data and listening for sensor configuration changes.
+			# Also pass configured aws_controller instance to threads. 
 			print "Starting Subscriber Thread..."
-			sub = subscriber_thread()
+			sub = subscriber_thread(aws, config)
 			sub_thread = Thread(target=sub.main)
 			sub_thread.start()
 
-			print "Starting Publisher Thread..."
-			pub = publisher_thread()
+			#print "Starting Publisher Thread..."
+			pub = publisher_thread(aws, config, sensors)
 			pub_thread = Thread(target=pub.main)
 			pub_thread.start()
 
@@ -55,7 +70,8 @@ class pi_controller():
 
 		# Cleanup
 		finally:
-			lockfiles.lockfile_remove(lockfile_path)
+			if self.owns_lock == True:
+				lockfiles.lockfile_remove(lockfile_path)
 
 pi = pi_controller()
 pi.startup()
