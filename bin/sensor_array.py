@@ -1,6 +1,11 @@
 #!/usr/bin/env python2
 from sensor import sensor
 from button_sensor import button_sensor
+from rangefinder_sensor import rangefinder_sensor
+from sound_sensor import sound_sensor
+from temperature_humidity_sensor import temperature_humidity_sensor
+from light_sensor import light_sensor
+from potentiometer_sensor import potentiometer_sensor
 
 # List of sensors and helper methods for accessing the sensors on the GrovePi
 class sensor_array:
@@ -12,7 +17,7 @@ class sensor_array:
 	def update_sensor(self, port_id, sensor_type, display_name, sample_rate, is_enabled):
 
 		# If is_enabled is a string, make sure it's converted to the correct boolean value
-		if type(is_enabled) is str:
+		if type(is_enabled) is str or type(is_enabled) is unicode:
 			if is_enabled == "True" or is_enabled == "true":
 				is_enabled = True
 			else:
@@ -28,6 +33,21 @@ class sensor_array:
 		if sensor_type == "button":
 			print "Configuring button on port", port_id
 			self.sensors.append(button_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
+		elif sensor_type == "rangefinder":
+			print "Configuring rangefinder on port", port_id
+			self.sensors.append(rangefinder_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
+		elif sensor_type == "sound":
+			print "Configuring sound sensor on port", port_id
+			self.sensors.append(sound_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
+		elif sensor_type == "temperature_humidity":
+			print "Configuring temperature and humidty sensor on port", port_id
+			self.sensors.append(temperature_humidity_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
+		elif sensor_type == "light":
+			print "Configuring light sensor on port", port_id
+			self.sensors.append(light_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
+		elif sensor_type == "potentiometer":
+			print "Configuring potentiometer sensor on port", port_id
+			self.sensors.append(potentiometer_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, False)))
 		else:
 			print "Sensor not implemented:", sensor_type
 
@@ -77,7 +97,6 @@ class sensor_array:
 		
 		# Read each sensor in the array
 		for sensor in self.sensors:
-			print sensor.is_enabled
 			if sensor.is_enabled and sensor.ready():
 				sensor.update_last_read_time()
 				payload.append(sensor.read())
