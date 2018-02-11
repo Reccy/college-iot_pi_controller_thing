@@ -94,7 +94,11 @@ class aws_controller:
 
 	# Publishes a payload to the passed in topic 
 	def publish(self, topic, payload):
-		print "DUMMY PUBLISH: ", payload, "TO", topic
+		if not self.connected:
+			print "Error: Can't publish. Not connected to AWS."
+			return
+
+		self.client.publish(topic, payload, 1)
 
 	# Subscribes to the sensor_config channel with the passed in callback
 	def subscribe_to_config_updates(self, callback):

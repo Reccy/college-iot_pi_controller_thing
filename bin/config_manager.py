@@ -1,8 +1,13 @@
 #!/usr/bin/env python2
 import os
 from xml.dom import minidom
+from sensor_array import sensor_array
 
+# Responsible for saving and loading configuration information
 class config_manager:
+
+	def __init__(self, sensors):
+		self.sensors = sensors
 
 	# Loads the AWS config information
 	def load_aws(self):
@@ -21,7 +26,44 @@ class config_manager:
 			self.aws_certificate_path = os.path.abspath(os.path.join(aws_file_path, self.aws_file.getElementsByTagName("certificate_path")[0].firstChild.data))
 			self.aws_private_key_path = os.path.abspath(os.path.join(aws_file_path, self.aws_file.getElementsByTagName("private_key_path")[0].firstChild.data))
 		except Exception as e:
-			print "Fatal error when reading AWS config data"
+			print "Error when reading AWS config data"
+
+			if hasattr(e, 'message') and e.message is not "":
+					print e.message
+
+	# Loads the sensor config information
+	def load_sensors(self):
+		try:
+			# Get paths for files
+			this_file_path = os.path.realpath(__file__)
+			sensor_file_abspath = os.path.abspath(os.path.join(this_file_path, "../../config/sensors.config"))
+			sensor_file_path = os.path.join(os.path.realpath(sensor_file_abspath), "../")
+
+			if not os.path.exists(sensor_file_abspath):
+				print "Not loading sensor config information from local file. File does not exist."
+				return
+
+			# Read the file
+			print "Reading sensor config from local file."
+			xml_doc = minidom.parse(sensor_file_abspath)
+
+			# Get list of sensor nodes
+			sensors_list = xml_doc.getElementsByTagName("sensor")
+
+			# Configure each node in the list
+			for sensor_node in sensors_list:
+				sensor_child_nodes = sensor_node.childNodes
+				new_port_id = sensor_child_nodes[0].childNodes[0].nodeValue
+				new_sensor_type = sensor_child_nodes[1].childNodes[0].nodeValue
+				new_display_name = sensor_child_nodes[2].childNodes[0].nodeValue
+				new_sample_rate = sensor_child_nodes[3].childNodes[0].nodeValue
+				new_is_enabled = sensor_child_nodes[4].childNodes[0].nodeValue
+				self.sensors.update_sensor(new_port_id, new_sensor_type, new_display_name, new_sample_rate, new_is_enabled)
+
+			print "Finished configuring sensors."
+
+		except Exception as e:
+			print "Error when reading sensor config data."
 
 			if hasattr(e, 'message') and e.message is not "":
 					print e.message
@@ -39,7 +81,7 @@ class config_manager:
 			try:
 				xml_doc = minidom.Document()
 				xml_doc.appendChild(xml_doc.createElement("sensors"))
-				xml_str = xml_doc.toprettyxml()
+				xml_str = xml_doc.toxml()
 
 				with open(sensor_file_abspath, "w") as xml_file:
 					xml_file.write(xml_str)
@@ -100,11 +142,14 @@ class config_manager:
 				sensors_node.appendChild(new_sensor)
 
 			# Write the changes to file
-			xml_str = sensor_file.toprettyxml()
+			xml_str = sensor_file.toxml()
 
 			with open(sensor_file_abspath, "w") as xml_file:
 				xml_file.write(xml_str)
 				xml_file.close()
+
+			# Update the sensor array in-memory
+			self.sensors.update_sensor(port_id, sensor_type, display_name, sample_rate, is_enabled)
 
 		except Exception as e:
 			print "Error when updating the Sensor config file"

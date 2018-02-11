@@ -2,6 +2,7 @@
 import os
 import time
 import logging
+from sensor_array import sensor_array
 from publisher_thread import publisher_thread
 from subscriber_thread import subscriber_thread
 from threading import Thread
@@ -29,8 +30,10 @@ class pi_controller():
 				exit(0)
 
 			# Setup configuration
-			config = config_manager()
+			sensors = sensor_array()
+			config = config_manager(sensors)
 			config.load_aws()
+			config.load_sensors()
 
 			# Test AWS connection
 			aws = aws_controller(config.aws_client_id, config.aws_endpoint, config.aws_root_ca_path, config.aws_certificate_path, config.aws_private_key_path)
@@ -55,7 +58,7 @@ class pi_controller():
 			sub_thread.start()
 
 			#print "Starting Publisher Thread..."
-			pub = publisher_thread(aws, config)
+			pub = publisher_thread(aws, config, sensors)
 			pub_thread = Thread(target=pub.main)
 			pub_thread.start()
 

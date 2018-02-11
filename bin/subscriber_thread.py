@@ -31,8 +31,10 @@ class subscriber_thread:
 
 	# Handles any updates to the device shadow
 	def handle_config_updates(self, client, userdata, message):
-		print "Received Sensor Config Update"
+		print "Received Sensor Config Update:"
 		try:
+			print message.payload
+
 			sensor_json = json.loads(message.payload)['message']
 			port_id = sensor_json['port_id']
 			sensor_type = sensor_json['sensor_type']

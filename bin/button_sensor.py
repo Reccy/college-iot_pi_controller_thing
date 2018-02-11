@@ -6,6 +6,6 @@ from sensor import sensor
 class button_sensor(sensor):
 
 	def read(self):
-		reading = grovepi.digitalRead(self.port_id)
-		print "[ PORT ", self.port_id, "] Button Read ->", reading
+		reading = grovepi.digitalRead(self.real_port_id)
+		print "[ PORT ", self.port_id, ", RATE", self.sample_rate,"] Button Read ->", reading
 		return reading
