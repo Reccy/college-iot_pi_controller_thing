@@ -70,8 +70,8 @@ class aws_controller:
 			print "Test failed."
 			print "Please double check your configuration and ensure that you have a stable internet connection."
 
-			if hasattr(e, 'message'):
-				print "Error: ", e.message
+			if hasattr(e, 'message') and e.message is not "":
+					print e.message
 
 			exit(1)
 

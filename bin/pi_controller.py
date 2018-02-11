@@ -36,15 +36,15 @@ class pi_controller():
 			aws = aws_controller(config.aws_client_id, config.aws_endpoint, config.aws_root_ca_path, config.aws_certificate_path, config.aws_private_key_path)
 			aws.test()
 
+			# Wait for the AWS test to complete
 			while not aws.ready:
-				print aws.ready
 				time.sleep(0.1)
 
 			# Connect to AWS
 			aws.connect()
 
+			# Wait for AWS to connect
 			while not aws.connected:
-				print aws.connected
 				time.sleep(0.1)
 
 			# Start threads for publishing sensor data and listening for sensor configuration changes.

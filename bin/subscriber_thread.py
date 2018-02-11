@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 import os
 import time
+import json
 from lockfile_manager import lockfile_manager
 
 # Thread responsible for listening for any sensor configuration changes from AWS
@@ -30,5 +31,25 @@ class subscriber_thread:
 
 	# Handles any updates to the device shadow
 	def handle_config_updates(self, client, userdata, message):
-		print "Config Updated"
-		print message.payload
+		print "Received Sensor Config Update"
+		try:
+			sensor_json = json.loads(message.payload)['message']
+			port_id = sensor_json['port_id']
+			sensor_type = sensor_json['sensor_type']
+			display_name = sensor_json['display_name']
+			sample_rate = sensor_json['sample_rate']
+			is_enabled = sensor_json['is_enabled']
+
+			print "Port ID: ", port_id
+			print "Sensor Type: ", sensor_type
+			print "Display Name: ", display_name
+			print "Sample Rate: ", sample_rate
+			print "Is Enabled: ", is_enabled
+
+			self.config_manager.update_sensor_config(port_id, sensor_type, display_name, sample_rate, is_enabled)
+
+		except Exception as e:
+			print "An error occured when receiving sensor updates"
+			
+			if hasattr(e, 'message') and message is not "":
+				print e.message
