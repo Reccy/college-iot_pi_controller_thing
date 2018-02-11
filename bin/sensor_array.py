@@ -11,13 +11,20 @@ class sensor_array:
 	# Updates sensor array based on passed in data
 	def update_sensor(self, port_id, sensor_type, display_name, sample_rate, is_enabled):
 
+		# If is_enabled is a string, make sure it's converted to the correct boolean value
+		if type(is_enabled) is str:
+			if is_enabled == "True" or is_enabled == "true":
+				is_enabled = True
+			else:
+				is_enabled = False
+
 		# Remove any sensors on the port_id
 		for sensor in self.sensors:
-			print "CHECKING ", sensor.port_id, "AGAINST", port_id
 			if sensor.port_id == str(port_id):
 				print "Replacing sensor on port", port_id 
 				self.sensors.remove(sensor)
 
+		# Add implemented sensor to list of sensors
 		if sensor_type == "button":
 			print "Configuring button on port", port_id
 			self.sensors.append(button_sensor(port_id, sensor_type, display_name, int(sample_rate), is_enabled, self.get_real_port_id(port_id, True)))
@@ -70,6 +77,7 @@ class sensor_array:
 		
 		# Read each sensor in the array
 		for sensor in self.sensors:
+			print sensor.is_enabled
 			if sensor.is_enabled and sensor.ready():
 				sensor.update_last_read_time()
 				payload.append(sensor.read())

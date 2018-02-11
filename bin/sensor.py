@@ -23,5 +23,5 @@ class sensor:
 	# Returns true if the time since the last read time is greater than the sample rate
 	def ready(self):
 
-		# -1 to account for integer ceil conversion
+		# +1 to account for integer conversion
 		return ((int(time.time()) + 1) > self.last_read_time + self.sample_rate)
